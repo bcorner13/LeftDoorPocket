@@ -1,0 +1,71 @@
+"""
+Bootstrap macro: create Params.FCStd with an empty VarSet for the Left Door Pocket project.
+
+Run from FreeCAD: Macro -> Macros... -> Execute.
+Idempotent: if Params.FCStd already exists, opens it and ensures a VarSet object is present.
+After running, all dimensional constraints in V1.3 should be bound to <<Params>>#VarSet.VarName.
+
+This macro intentionally does NOT pre-populate the VarSet with project-specific variables.
+Add Params variables one at a time as you refactor each sketch — that way each variable
+has a clear, single concern. See CLAUDE.md "Suggested first refactor steps".
+"""
+import os
+import FreeCAD as App
+
+# Resolve symlinks: this macro is expected to be symlinked from FreeCAD's user
+# macro directory into the project's macros/ folder. realpath() ensures we
+# compute PROJECT_DIR relative to the actual file in the project, not the symlink.
+_THIS_FILE = os.path.realpath(__file__)
+PROJECT_DIR = os.path.dirname(os.path.dirname(_THIS_FILE))
+PARAMS_PATH = os.path.join(PROJECT_DIR, "Params.FCStd")
+VARSET_NAME = "VarSet"
+
+
+def open_or_create():
+    if os.path.exists(PARAMS_PATH):
+        existing = next(
+            (d for d in App.listDocuments().values()
+             if os.path.abspath(d.FileName or "") == os.path.abspath(PARAMS_PATH)),
+            None,
+        )
+        if existing is not None:
+            print(f"[ok] Params.FCStd already open: {PARAMS_PATH}")
+            return existing, False
+        doc = App.openDocument(PARAMS_PATH)
+        print(f"[ok] opened existing Params.FCStd: {PARAMS_PATH}")
+        return doc, False
+
+    doc = App.newDocument("Params")
+    doc.FileName = PARAMS_PATH
+    print(f"[new] created Params document, will save to {PARAMS_PATH}")
+    return doc, True
+
+
+def ensure_varset(doc):
+    vs = doc.getObject(VARSET_NAME)
+    if vs is not None:
+        print(f"[skip] {VARSET_NAME} already exists with "
+              f"{len(vs.PropertiesList)} properties")
+        return vs
+    vs = doc.addObject("App::VarSet", VARSET_NAME)
+    vs.Label = "VarSet"
+    print(f"[new] created empty {VARSET_NAME}")
+    return vs
+
+
+def main():
+    doc, is_new = open_or_create()
+    ensure_varset(doc)
+    doc.recompute()
+    doc.save()
+    print(f"[saved] {PARAMS_PATH}")
+    print()
+    print("Next steps:")
+    print("  1. Open 'Left Door Pocket V1.3.FCStd' alongside Params.FCStd.")
+    print("  2. Run scripts/audit_parametric.py from the project root to see violations.")
+    print("  3. Pick a sketch (start simple — e.g. Sketch_PegL).")
+    print("  4. For each dimensional constraint, add a Params variable, then bind via setExpression.")
+    print("  5. Re-run the audit; commit when that sketch is clean.")
+
+
+main()

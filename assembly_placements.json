@@ -1,0 +1,58 @@
+{
+  "DoorPocket": {
+    "name": "Body",
+    "pos": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rot_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "rot_angle_deg": 0.0
+  },
+  "BackingPlate": {
+    "name": "Body001",
+    "pos": [
+      0.0,
+      27.39,
+      0.0
+    ],
+    "rot_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "rot_angle_deg": 0.0
+  },
+  "Accessory_1": {
+    "name": "Body002",
+    "pos": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rot_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "rot_angle_deg": 0.0
+  },
+  "Accessory_2": {
+    "name": "Body003",
+    "pos": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rot_axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "rot_angle_deg": 0.0
+  }
+}

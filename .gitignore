@@ -1,0 +1,22 @@
+# FreeCAD backups
+*.FCBak
+
+# Session-in-progress snapshots (timestamped working state, not committed)
+*.Session-*.FCStd
+
+# Slicer output — regenerable, used only for cost analysis
+gcode/*
+!gcode/.gitkeep
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+
+# Claude Code local state
+.claude/
+
+# Broken/empty 84-byte FreeCAD origin-stub STL exports
+*-AssemblyBody.stl
+*-Distribution_Block.stl
